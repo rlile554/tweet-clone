@@ -1,7 +1,8 @@
-import React from 'react';
+import React, {useState} from 'react';
 import styled from 'styled-components';
 import TweetInput from './TweetInput/TweetInput';
 import TweetList from './TweetList/TweetList';
+import {Tweet} from './interface';
 
 const AppContainer = styled.div`
   height: 100vh;
@@ -28,14 +29,30 @@ const Title = styled.div`
   align-items: center;
 `;
 
+let id = 2;
+
 function App() {
+  const [tweets, setTweets] = useState<Tweet[]>([]);
+
+  const addTweet = (message: string) => {
+    console.log("addTweet", message);
+    const newTweets = [{message, id: id++}, ...tweets];
+    console.log({newTweets})
+    setTweets(newTweets);
+  }
+
+  const deleteTweet = (id: number) => {
+    const newTweets = tweets.filter(t => t.id !== id);
+    setTweets(newTweets);
+  }
+
   return (
     <AppContainer>
       <Title>
         SUPER AWESOME TWITTER CLONE
       </Title>
-      <TweetInput/>
-      <TweetList/>
+      <TweetInput onSubmit={addTweet}/>
+      <TweetList tweets={tweets} deleteTweet={deleteTweet}/>
     </AppContainer>
   );
 }
